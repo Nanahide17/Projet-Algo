@@ -24,7 +24,8 @@ int main(int argc, char* argv[]) {
     SDL_Texture* texture4 = SDL_CreateTextureFromSurface(renderer, image4);
     SDL_FreeSurface(image4);
 
-    SDL_Rect imageRect1 = {100, 100, 100, 100};
+    SDL_Rect imageRect1 = {957-50, 540-50, 100, 100};
+    //SDL_Rect imageRect1 = {100, 100, 100, 100};
     SDL_Color color1 = {255, 255, 255, 255};
     SDL_Texture* currentImage = texture1;
 
@@ -40,6 +41,7 @@ int main(int argc, char* argv[]) {
                 case SDL_MOUSEBUTTONDOWN:
                     if (SDL_PointInRect(&(SDL_Point){event.button.x, event.button.y}, &imageRect1)) {
                         printf("Image 1 cliquée\n");
+                        printf("Clicked at x=%d, y=%d\n", event.button.x, event.button.y); // afficher les coordonnées du clic
                         imageClicked = SDL_TRUE;
                     }
                     break;
@@ -76,4 +78,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
