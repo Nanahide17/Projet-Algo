@@ -19,7 +19,7 @@ typedef struct coordonnées{
     CASE *NE;
     CASE *E;
     CASE *SE;
-}POS;
+}position;
 
 //Tableau pour recenser les cases
 CASE* structcase[61];
