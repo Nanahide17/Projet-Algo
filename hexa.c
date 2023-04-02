@@ -240,7 +240,6 @@ int grilledep(){
     
 }
 
-
 int main (){
     int nbille = 9;
     printf("Je fais un hexagone qui a des '1' la où les cases sont jouables... \n");
