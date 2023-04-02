@@ -4,9 +4,8 @@
 
 #include "abalone.h"
 #include "Donnees.h"
-#include "initialisationPlateau.c"
-#include "creationCase.c"
-#include "defJoueurinit.c"
+#include "init.c"
+
 // On initialise les pions blancs et noirs sur le plateau.
 int clic = 0;
 
@@ -22,9 +21,9 @@ int main(int argc, char *argv[])
     SDL_FreeSurface(imageG);
 
     // SDL_Surface *image = IMG_Load("billeblanche.png");
-    SDL_Surface **pim[14];
-    SDL_Surface **pimb[14];
-    SDL_Surface **pimbleu[14];
+    SDL_Surface *pim[14];
+    SDL_Surface *pimb[14];
+    SDL_Surface *pimbleu[14];
 
     for (int i = 0; i < 14; i++)
     {
@@ -37,9 +36,9 @@ int main(int argc, char *argv[])
     }
 
     // SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
-    SDL_Texture **ptex[14];
-    SDL_Texture **ptexb[14];
-    SDL_Texture **ptexbleu[14];
+    SDL_Texture *ptex[14];
+    SDL_Texture *ptexb[14];
+    SDL_Texture *ptexbleu[14];
     for (int i = 0; i<14; i++)
     {
         SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, pim[i]);
@@ -73,9 +72,9 @@ int main(int argc, char *argv[])
 
     SDL_Color color = {255, 255, 255, 255};
 
-    SDL_Texture **pcurim[14];
-    SDL_Texture **pcurimb[14];
-    SDL_Texture **pcurimbleu[14];
+    SDL_Texture *pcurim[14];
+    SDL_Texture *pcurimb[14];
+    SDL_Texture *pcurimbleu[14];
     for (int i = 0; i < 14; i++)
     {
         SDL_Texture *currentImage = ptex[i];
@@ -113,7 +112,7 @@ int main(int argc, char *argv[])
                     for(int i=0;i<14;i++){
                         //printf("Clique %d,%d \n",&(SDL_Point){event.button.x}, &(SDL_Point){event.button.y});
                         if((&pimrect[1][i]) < (&(SDL_Point){event.button.x})){
-                            printf("Clicked %d at x=%d, y=%d\n", i, event.button.x, event.button.y); // afficher les coordonnées du clic
+                            printf("Clicked %d at x=%d\n", i, event.button.x); // afficher les coordonnées du clic
                             imageClicked1 = SDL_TRUE;
                         }
                         break;
