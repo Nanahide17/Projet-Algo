@@ -21,6 +21,10 @@ typedef struct coordonnées{
     CASE *SE;
 }POS;
 
+typedef struct pile{
+    CASE* premier;
+}PILE;
+
 //Tableau pour recenser les cases
 CASE* structcase[61];
 
@@ -31,14 +35,15 @@ int main();
 void initialisationPlateau();
 void creationCase(CASE* casse, int i);
 void defJoueurinit(CASE* casse);
-
-
-
+void alentour();
+void initialisationPile(PILE* pil, CASE* casse);
+void reliageBas(PILE* pile1, PILE* pile2);
+void reliageHaut(PILE* pile1, PILE* pile2);
 //Fonctions SDL
 
 
 
 //Fonction test
-void testByPrint(int i);
+//void testByPrint(int i);
 
 #endif // ABALONE_H_INCLUDED
