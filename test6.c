@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
     SDL_Texture *ptex[14];
     SDL_Texture *ptexb[14];
     SDL_Texture *ptexbleu[14];
-    for (int i = 0; i<14; i++)
+
+    for (int i = 0; i < 14; i++)
     {
         SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, pim[i]);
         ptex[i] = texture;
@@ -47,14 +48,6 @@ int main(int argc, char *argv[])
         ptexb[i] = textureb;
         SDL_Texture *texturebleu = SDL_CreateTextureFromSurface(renderer, pimbleu[i]);
         ptexbleu[i] = texturebleu;
-    }
-
-    for (int i = 0; i < 14; i++)
-    {
-        //SDL_FreeSurface(image);
-        SDL_FreeSurface(pim[i]);
-        SDL_FreeSurface(pimb[i]);
-        SDL_FreeSurface(pimbleu[i]);
     }
 
     SDL_Rect pimrect[2][14];
@@ -95,55 +88,67 @@ int main(int argc, char *argv[])
         {
             switch (event.type)
             {
-                case SDL_QUIT: //On ferme la fenètre
-                    done = SDL_TRUE;
-                    break;
+            case SDL_QUIT: // On ferme la fenètre
+                done = SDL_TRUE;
+                break;
 
-                case SDL_MOUSEBUTTONDOWN: // Il y a un clic de la souris
-                    /*
-                    if (SDL_PointInRect(&(SDL_Point){event.button.x, event.button.y}, &pimrect[2][i]))
+            case SDL_MOUSEBUTTONDOWN:
+                int i=0;
+                
+                for (i=0; i < 14; i++)
+                {
+                    int clic = 0;
+                    if (((pimrectb[0][i]).x <= event.button.x) && ((pimrectb[1][i]).y <= event.button.y))
                     {
                         printf("Clicked %d at x=%d, y=%d\n", i, event.button.x, event.button.y); // afficher les coordonnées du clic
                         imageClicked1 = SDL_TRUE;
                     }
-                    break;
-                    */
-                    
-                    for(int i=0;i<14;i++){
-                        //printf("Clique %d,%d \n",&(SDL_Point){event.button.x}, &(SDL_Point){event.button.y});
-                        if((&pimrect[1][i]) < (&(SDL_Point){event.button.x})){
-                            printf("Clicked %d at x=%d\n", i, event.button.x); // afficher les coordonnées du clic
-                            imageClicked1 = SDL_TRUE;
-                        }
-                        break;
-                    }
-                    
-                    
-        }
-    }
 
-    SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, textureG, NULL, NULL); // Afficher l'image blanche en arrière-plan
+                    if (clic % 2 == 0)
+                        {
+                            pcurim[i] = ptexbleu[i];
+                            clic++;
+                        }
+                        else if (clic % 2 == 1)
+                        {
+                            pcurim[i] = ptex[i];
+                            clic++;
+                        }
+
+                    break;
+                }
+            }
+        }
+
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, textureG, NULL, NULL); // Afficher l'image blanche en arrière-plan
+
+        for (int i = 0; i < 14; i++)
+        {
+            SDL_RenderCopy(renderer, pcurim[i], NULL, &pimrect[1][i]);
+            SDL_RenderCopy(renderer, pcurimb[i], NULL, &pimrectb[1][i]);
+        }
+        SDL_RenderPresent(renderer);
+    }
 
     for (int i = 0; i < 14; i++)
     {
-        SDL_RenderCopy(renderer, pcurim[i], NULL, &pimrect[1][i]);
-        SDL_RenderCopy(renderer, pcurimb[i], NULL, &pimrectb[1][i]);
-        
+        // SDL_FreeSurface(image);
+        SDL_FreeSurface(pim[i]);
+        SDL_FreeSurface(pimb[i]);
+        SDL_FreeSurface(pimbleu[i]);
     }
-    SDL_RenderPresent(renderer);
-}
 
-for (int i = 0; i < 14; i++)
-{
-    SDL_DestroyTexture(ptex[i]);
-    SDL_DestroyTexture(ptexb[i]);
-    SDL_DestroyTexture(ptexbleu[i]);
-}
+    for (int i = 0; i < 14; i++)
+    {
+        SDL_DestroyTexture(ptex[i]);
+        SDL_DestroyTexture(ptexb[i]);
+        SDL_DestroyTexture(ptexbleu[i]);
+    }
 
-SDL_DestroyRenderer(renderer);
-SDL_DestroyWindow(window);
-SDL_Quit();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
-return 0;
+    return 0;
 }
