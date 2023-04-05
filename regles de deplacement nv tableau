@@ -1,0 +1,623 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "./zColor.h"
+
+#include <time.h>
+
+#define X 17
+#define Y 9
+
+typedef enum
+{
+    PAS_JOUABLE,
+    EJECTEE,
+    NOIR,
+    BLANC,
+    LIBRE
+} TYPE_CASE;
+
+typedef enum
+{
+    A, // pas de direction
+    NE,
+    NO,
+    SE,
+    SO,
+    E,
+    O
+} DIRECTION;
+
+typedef struct
+{
+    int posX;
+    int posY;
+    TYPE_CASE type;
+    struct autour *ALENTOUR;
+
+} CASE;
+
+// Ana va faire les differentes structures
+// Moi je vais re faire l'initialion du tableau en fct de mon terminal et des nvell structures
+
+typedef struct autour
+{
+    CASE *NE;
+    CASE *NO;
+    CASE *SO;
+    CASE *O;
+    CASE *E;
+} ALENTOUR;
+
+void iniPlateau(CASE monPlateau[Y][X]);
+// void afficheNb(CASE monPlateau[Y][X]);
+void affichePlateau(CASE monPlateau[Y][X]);
+void DeplacePion(CASE plateau[Y][X], TYPE_CASE joueur, DIRECTION direction, int posX, int posY);
+void Deplace2pion(CASE plateau[Y][X], TYPE_CASE joueur, DIRECTION direction, int posX, int posY);
+void Deplace3pion(CASE plateau[Y][X], TYPE_CASE joueur, DIRECTION direction, int posX, int posY);
+// faire fct quel joueur doit jouer/
+
+int main()
+{
+
+    CASE plateau[Y][X];
+    iniPlateau(plateau);
+    TYPE_CASE j1 = NOIR;
+    TYPE_CASE j2 = BLANC;
+
+    DIRECTION direction;
+    int posX;
+    int posY;
+
+    affichePlateau(plateau);
+
+    printf("quels pion voulez vous deplacer");
+    printf("Votre X: ");
+    scanf("%d", &posX);
+    printf("Votre Y: ");
+    scanf("%d", &posY);
+    printf("Entrez la direction de mouvement : NE=1,NO=2,SE=3,SO=4,E=5,O=6 \n");
+    scanf("%d", &direction);
+    // DeplacePion(plateau, j2, direction, posX, posY);
+    Deplace2pion(plateau, j2, direction, posX, posY);
+    // Deplace3pion(plateau, j2, direction, posX, posY);
+
+    sleep(2);
+
+    affichePlateau(plateau);
+
+    return 0;
+}
+// rajouté une fonction qui me fait une garder mon terminal avec mes chiffres (pour sue ce soit lisible) MAIS qui fait corrspondre au cooredonné des cases d'anahide
+
+/*void CorrespTableau(CASE monPlateau[Y][X])
+{
+    int coplateau[2][61] = {{720, 840, 960, 1080, 1200, 1260, 1140, 1020, 900, 780, 660, 600, 720, 840, 960, 1080, 1200, 1320, 1380, 1260, 1140, 1020, 900, 780, 660, 535, 475, 600, 720, 840, 960, 1080, 1200, 1320, 1440, 1380, 1260, 1140, 1020, 900, 780, 660, 535, 600, 720, 840, 960, 1080, 1200, 1320, 1260, 1140, 1020, 900, 780, 655, 720, 840, 960, 1080, 1200}, {955, 955, 955, 955, 955, 850, 850, 850, 850, 850, 850, 745, 745, 745, 745, 745, 745, 745, 640, 640, 640, 640, 640, 640, 640, 640, 540, 540, 540, 540, 540, 540, 540, 540, 540, 435, 435, 435, 435, 435, 435, 435, 435, 330, 330, 330, 330, 330, 330, 330, 225, 225, 225, 225, 225, 225, 120, 120, 120, 120, 120}};
+    // +120 pour les X et -105 p
+    for (int line = 0; line < Y; line++)
+    {
+        for (int col = 0; col < X; col++)
+        {
+            monPlateau[line][col].posX = coplateau[//element 2 de coplateau];
+            monPlateau[line][col].posY = line [//element 1 de copleatau ];
+
+            // notre tableau est de taille 9ligne et 17 colonne
+        }
+    }
+}
+*/
+
+void iniPlateau(CASE monPlateau[Y][X])
+{
+    //int conoire[2][14] = {{720, 840, 960, 1080, 1200,1260, 1140, 1020, 900, 780, 660,840, 960, 1080},{955,955,955,955,955,850,850,850,850,850,850,745,745,745,}};
+   // int coplateau[2][61] = {{720, 840, 960, 1080, 1200, 1260, 1140, 1020, 900, 780, 660, 600, 720, 840, 960, 1080, 1200, 1320, 1380, 1260, 1140, 1020, 900, 780, 660, 535, 475, 600, 720, 840, 960, 1080, 1200, 1320, 1440, 1380, 1260, 1140, 1020, 900, 780, 660, 535, 600, 720, 840, 960, 1080, 1200, 1320, 1260, 1140, 1020, 900, 780, 655, 720, 840, 960, 1080, 1200}, {955, 955, 955, 955, 955, 850, 850, 850, 850, 850, 850, 745, 745, 745, 745, 745, 745, 745, 640, 640, 640, 640, 640, 640, 640, 640, 540, 540, 540, 540, 540, 540, 540, 540, 540, 435, 435, 435, 435, 435, 435, 435, 435, 330, 330, 330, 330, 330, 330, 330, 225, 225, 225, 225, 225, 225, 120, 120, 120, 120, 120}};
+
+
+    int cpt = 0;
+    for (int line = 0; line < Y; line++)
+    {
+        cpt = 0;
+        for (int col = 0; col < X; col++)
+        {
+            monPlateau[line][col].posX = col;
+            monPlateau[line][col].posY = line;
+
+            if ((line % 2) == 0)
+            {
+                if ((col % 2) == 0)
+
+                    monPlateau[line][col].type = LIBRE;
+
+                else
+                    monPlateau[line][col].type = PAS_JOUABLE;
+            }
+            else
+            {
+                if ((col % 2) != 0)
+                    monPlateau[line][col].type = LIBRE;
+                else
+                    monPlateau[line][col].type = PAS_JOUABLE;
+            }
+            if (monPlateau[line][col].type == LIBRE)
+            {
+                // Place le 1er elmt (indice = 0) à 955 de hauteur
+                // Et décale de -105*indice les autres élèments
+                monPlateau[line][col].posY = 955 - 105 * line;
+
+                switch (line)
+                {
+                case 0:
+                case 8:
+                    monPlateau[line][col].posX = 720 + 120 * cpt;
+                    break;
+                case 1:
+                case 7:
+                    monPlateau[line][col].posX = 660 + 120 * cpt;
+                    break;
+                case 2:
+                case 6:
+                    monPlateau[line][col].posX = 600 + 120 * cpt;
+                    break;
+                case 3:
+                case 5:
+                    monPlateau[line][col].posX = 540 + 120 * cpt;
+                    break;
+                case 4:
+                    monPlateau[line][col].posX = 480 + 120 * cpt;
+                    break;
+
+                default:
+                    printf("Dépassement de ligne !\n");
+                    break;
+                }
+                cpt++;
+            }
+        }
+    }
+
+    for (int j = 0; j < 4; j++)
+    {
+        for (int i = 0; i < (4 - j); i++)
+        {
+            monPlateau[0 + j][i].type = EJECTEE;
+            monPlateau[8 - j][i].type = EJECTEE;
+
+            monPlateau[0 + j][13 + i + j].type = EJECTEE;
+            monPlateau[8 - j][13 + i + j].type = EJECTEE;
+        }
+    }
+
+    for (int line = 0; line < Y; line++)
+    {
+        for (int col = 0; col < X; col++)
+        {
+            if (monPlateau[line][col].type == LIBRE)
+            {
+                if (line < 2)
+                    monPlateau[line][col].type = NOIR;
+
+                if (line > 6)
+                    monPlateau[line][col].type = BLANC;
+                if (line == 2 && col > 5 && col < 11)
+                    monPlateau[line][col].type = NOIR;
+                if (line == 6 && col > 5 && col < 11)
+                    monPlateau[line][col].type = BLANC;
+            }
+        }
+    }
+}
+
+void affichePlateau(CASE monPlateau[Y][X])
+{
+    printf("\e[1;1H\e[2J"); // clear screen
+    for (int line = 0; line < Y + 1; line++)
+    {
+        if (line != 0)
+            printf(reset "%d", line - 1);
+        else
+            printf("0");
+        for (int col = 0; col < X; col++)
+        {
+            if (line == 0)
+                printf(reset "%-2.d", col);
+            else
+            {
+                switch (monPlateau[line - 1][col].type)
+                {
+                case PAS_JOUABLE:
+                    printf(BLUHB "  ");
+                    break;
+                case EJECTEE:
+                    printf(REDHB "  ");
+                    break;
+                case NOIR:
+                    printf(BLKHB "  ");
+                    break;
+                case BLANC:
+                    printf(WHTHB "  ");
+                    break;
+                case LIBRE:
+                    printf(reset "  ");
+                    break;
+
+                default:
+                    printf(YELHB "  ");
+                    break;
+                }
+            }
+        }
+        printf(reset "\n");
+    }
+    printf("\n");
+}
+
+void DeplacePion(CASE plateau[Y][X], TYPE_CASE joueur, DIRECTION direction, int posX, int posY)
+{
+
+    if (plateau[posY][posX].type != joueur)
+    {
+        printf("Mauvaise couleur !");
+        return;
+    }
+
+    switch (direction)
+    {
+    case SO:
+        if (plateau[posY - 105][posX + 60].type == LIBRE)
+        {
+            plateau[posY - 105][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+        break;
+    case SE:
+        if (plateau[posY + 105][posX + 60].type == LIBRE)
+        {
+            plateau[posY + 105][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+        break;
+
+    case NE:
+        if (plateau[posY - 105][posX + 60].type == LIBRE)
+        {
+            plateau[posY - 105][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+
+    case NO:
+        if (plateau[posY - 105][posX + 60].type == LIBRE)
+        {
+            plateau[posY - 105][posX - 60].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+
+    case E:
+        if (plateau[posY][posX + 60].type == LIBRE)
+        {
+            plateau[posY][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case O:
+        if (plateau[posY][posX - 60].type == LIBRE)
+        {
+            plateau[posY][posX - 60].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case A:
+    default:
+        printf("Mauvaise direction");
+        break;
+    }
+}
+
+void Deplace2pion(CASE plateau[Y][X], TYPE_CASE joueur, DIRECTION direction, int posX, int posY)
+{
+    if (plateau[posY][posX].type != joueur)
+    {
+        printf("Mauvaise couleur !");
+        return;
+    }
+    switch (direction)
+    {
+    case SO:
+        if (plateau[posY + 210][posX - 120].type == LIBRE)
+        {
+            plateau[posY + 105][posX - 60].type = plateau[posY][posX].type;
+            plateau[posY + 210][posX - 120].type = plateau[posY + 105][posX - 60].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case SE:
+
+        if (plateau[posY + 210][posX + 120].type == LIBRE)
+        {
+            plateau[posY + 105][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY + 210][posX + 120].type = plateau[posY + 105][posX + 60].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case NE:
+        if (plateau[posY - 210][posX + 120].type == LIBRE)
+        {
+            plateau[posY + 105][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY + 210][posX + 120].type = plateau[posY + 105][posX + 60].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case NO:
+        if (plateau[posY - 210][posX - 120].type == LIBRE)
+        {
+            plateau[posY - 105][posX - 60].type = plateau[posY][posX].type;
+            plateau[posY - 210][posX - 120].type = plateau[posY - 105][posX - 60].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case E:
+        if (plateau[posY][posX + 210].type == LIBRE)
+        {
+            plateau[posY][posX + 105].type = plateau[posY][posX + 105].type;
+            plateau[posY][posX - 210].type = plateau[posY][posX - 105].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+
+    case O:
+        if (plateau[posY][posX - 210].type == LIBRE)
+        {
+            plateau[posY][posX - 210].type = plateau[posY][posX - 105].type;
+            plateau[posY][posX - 105].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+    case A:
+    default:
+        break;
+
+        printf("Mouvement invalide \n"); // REFAIRE LE MOUVEMENT
+        break;
+    }
+}
+
+void Deplace3pion(CASE plateau[Y][X], TYPE_CASE joueur, DIRECTION direction, int posX, int posY)
+{
+
+    if (plateau[posY][posX].type != joueur)
+    {
+        printf("Mauvaise couleur !");
+        return;
+    }
+
+    switch (direction)
+    {
+    case SO:
+        if (plateau[posY + 315][posX - 180].type == LIBRE)
+        {
+            plateau[posY + 105][posX - 60].type = plateau[posY][posX].type;
+            plateau[posY + 210][posX - 120].type = plateau[posY + 105][posX - 60].type;
+            plateau[posY + 315][posX - 180].type = plateau[posY + 210][posX - 120].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+        break;
+    case SE:
+        if (plateau[posY + 315][posX + 180].type == LIBRE)
+        {
+            plateau[posY + 105][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY + 210][posX + 120].type = plateau[posY + 105][posX + 60].type;
+            plateau[posY + 315][posX + 180].type = plateau[posY + 210][posX + 120].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case NO:
+        if (plateau[posY + 3][posX - 3].type == LIBRE)
+        {
+            plateau[posY + 105][posX - 60].type = plateau[posY][posX].type;
+            plateau[posY + 210][posX - 120].type = plateau[posY + 105][posX - 60].type;
+            plateau[posY + 315][posX - 180].type = plateau[posY + 210][posX - 120].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+        break;
+    case NE:
+        if (plateau[posY - 315][posX + 180].type == LIBRE)
+        {
+            plateau[posY - 105][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY - 210][posX + 120].type = plateau[posY - 105][posX + 60].type;
+            plateau[posY - 315][posX + 180].type = plateau[posY - 210][posX + 120].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case E:
+        if (plateau[posY][posX + 180].type == LIBRE)
+        {
+            plateau[posY][posX + 60].type = plateau[posY][posX].type;
+            plateau[posY][posX + 120].type = plateau[posY][posX + 120].type;
+            plateau[posY][posX + 180].type = plateau[posY][posX + 180].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+        break;
+    case O:
+        if (plateau[posY][posX - 180].type == LIBRE)
+        {
+            plateau[posY][posX - 60].type = plateau[posY][posX].type;
+            plateau[posY][posX - 120].type = plateau[posY][posX - 120].type;
+            plateau[posY][posX - 180].type = plateau[posY][posX - 180].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+    case A:
+    default:
+        printf("Mauvaise direction");
+        break;
+    }
+}
+
+/*
+
+
+void Deplace2vs1(CASE plateau[Y][X], TYPE_CASE joueur, DIRECTION direction, int posX, int posY)
+{
+
+    if (plateau[posY][posX].type != joueur && [posY + 1][posX - 1].type != joueur )
+    {
+        printf("Mauvaise couleur !");
+
+        return;
+    }
+
+    switch (direction)
+    {
+    case SO:
+        if {
+            plateau[posY + 1][posX - 1].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+            }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+        break;
+    case SE:
+        if (plateau[posY + 1][posX + 1].type == LIBRE)
+        {
+            plateau[posY + 1][posX + 1].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+
+        break;
+
+    case NE:
+        if (plateau[posY - 1][posX + 1].type == LIBRE)
+        {
+            plateau[posY - 1][posX + 1].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+
+    case NO:
+        if (plateau[posY - 1][posX - 1].type == LIBRE)
+        {
+            plateau[posY - 1][posX - 1].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+
+    case E:
+        if (plateau[posY][posX + 1].type == LIBRE)
+        {
+            plateau[posY][posX + 1].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case O:
+        if (plateau[posY][posX - 1].type == LIBRE)
+        {
+            plateau[posY][posX - 1].type = plateau[posY][posX].type;
+            plateau[posY][posX].type = LIBRE;
+        }
+        else
+        {
+            printf("la case n'est pas libre");
+        }
+        break;
+    case A:
+    default:
+        printf("Mauvaise direction");
+        break;
+    }
+}*/
