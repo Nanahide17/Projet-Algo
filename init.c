@@ -28,9 +28,9 @@ void defJoueurinit(CASE* casse){
     //En fonction de la position de la case, on attribut le type de case qu'il sera
     int x=casse->posX,y=casse->posY;
     //Vérification si case avec pion blanc ou non
-    if(y==120 || y==225 || y==330){
+    if(y==115 || y==220 || y==325){
         if(x>=655 && x<=1260){
-            if(y==330 && (x<=720 || x>=1200)){
+            if(y==325 && (x<=720 || x>=1200)){
                 casse->couleur=0;
                 return;
             }
