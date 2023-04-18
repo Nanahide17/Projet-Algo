@@ -6,6 +6,19 @@
 #include "Donnees.h"
 #include "init.c"
 
+// Fonction qui demande le nombre de billes à bouger
+void demande(int *pointeur){
+    int element;
+    printf("combien de billes souhaitez vous déplacer ?\n");
+    scanf("%d",&element);
+    
+    if((element >3) || (element<=0)){
+        printf("Saisie invalide, merci de réessayer\n");
+        demande(pointeur);
+    }
+    *pointeur=element;
+}
+
 // On initialise les pions blancs et noirs sur le plateau.
 int main(int argc, char *argv[])
 {
@@ -54,7 +67,7 @@ int main(int argc, char *argv[])
     {
         SDL_Rect imageRect = {(conoire[0][i]) - 50, (conoire[1][i]) - 50, 100, 100};
         pimrect[1][i] = imageRect;
-        // printf("test %d \n", pimrect[1][i]);
+        //printf("test %d \n", pimrect[1][i]);
 
         SDL_Rect imageRectb = {(coblanc[0][i]) - 50, (coblanc[1][i]) - 50, 100, 100};
         pimrectb[1][i] = imageRectb;
@@ -79,6 +92,8 @@ int main(int argc, char *argv[])
     int i = 0;
     int j = 0;
     int compteur = 0;
+    int *x;
+    demande(&x);
 
     while (!done)
     {
@@ -92,9 +107,9 @@ int main(int argc, char *argv[])
                 done = SDL_TRUE;
                 break;
 
-            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONDOWN: // Quand il y a un clic
 
-                // recup le i de la boule sur laquelle on clique
+                // On recup le i de la boule sur laquelle on clique
                 int x1;
                 int y1;
                 int x2;
@@ -122,24 +137,32 @@ int main(int argc, char *argv[])
                 // on change la couleur de la bille correspondante
                 if ((((conoire[0][i]) > (x1 - 35)) && ((conoire[0][i]) <= (x1 + 35))) && (((conoire[1][i]) > (y1 - 35)) && ((conoire[1][i]) <= (y1 + 35))))
                 {
-                    if ((pcurim[i]) == (ptexbleu[i]))
+                    if ((pcurim[i]) == (ptexbleu[i])) // La bille bleu (de selection) redevient blanche (annulations)
                     {
                         pcurim[i] = ptex[i];
                         compteur--;
                         printf("%d\n", compteur);
                     }
                     else
-                    {
-                        if ((compteur >= 3) || (compteur < 0))
+                    {   
+                        int recupx =x; // Ici, on vérifie que le nombre de billes qui changent de couleur ne dépasse pas le nombre de bille à bouger
+                        if ((compteur >= recupx) || (compteur < 0))
                         {
                             printf("Coup impossible\n");
                         }
-                        else
+                        else // La bille cliquée devient bleu si elle était blanche.
                         {
                             pcurim[i] = ptexbleu[i];
                             compteur++;
-                            printf("%d\n", compteur);
+                            //printf("%d\n", compteur);
                         }
+                    }
+                }
+
+                // Recupération du clic
+                for(int i=1;i<=61;i++){
+                    if ((((coplateau[0][i]) > (x1 - 35)) && ((coplateau[0][i]) <= (x1 + 35))) && (((coplateau[1][i]) > (y1 - 35)) && ((coplateau[1][i]) <= (y1 + 35)))){
+                        printf("Clic sur la %dième case.\n",i);
                     }
                 }
             }
