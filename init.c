@@ -11,6 +11,7 @@ void initialisationPlateau(){
         creationCase(casse,i);
         POS *alentours = (POS*)malloc(sizeof(POS));
         casse->alentours=alentours;
+        testByPrint(i);
     }
     alentour();
 }
@@ -101,6 +102,10 @@ void alentour(){
     reliageBas(LIGNE1,LIGNE2);
     reliageBas(LIGNE2,LIGNE3);
     reliageBas(LIGNE3,LIGNE4);
+    reliageHaut(LIGNE4,LIGNE5);
+    reliageHaut(LIGNE5,LIGNE6);
+    reliageHaut(LIGNE6,LIGNE7);
+    reliageHaut(LIGNE7,LIGNE8);
 
 }
 
@@ -141,10 +146,6 @@ void reliageBas(PILE *pile1,PILE *pile2){
 
         case_pile1 = case_pile1->alentours->E;
     }
-    case_pile1->alentours->E = NULL;
-    case_pile2->alentours->E = NULL;
-    case_pile1->alentours->SE = NULL;
-    case_pile2->alentours->SE = NULL;
 }
 
 void reliageHaut(PILE* pile1, PILE* pile2){
@@ -167,8 +168,4 @@ void reliageHaut(PILE* pile1, PILE* pile2){
 
         case_pile2=case_pile2->alentours->E;
     }
-    case_pile1->alentours->E = NULL;
-    case_pile2->alentours->E = NULL;
-    case_pile1->alentours->NE = NULL;
-    case_pile2->alentours->NE = NULL;
 }
