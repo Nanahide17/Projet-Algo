@@ -260,7 +260,7 @@ int grille() // On défini notre grille
             }
 
             SDL_RenderClear(renderer); // On actualise le rendu 
-            //SDL_RenderCopy(renderer, textureG, NULL, NULL); // Afficher l'image blanche en arrière-plan
+            SDL_RenderCopy(renderer, textureG, NULL, NULL); // Afficher l'image blanche en arrière-plan
 
             for (int i = 0; i < 61; i++) // Pour chaque case
             {
