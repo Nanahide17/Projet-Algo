@@ -210,11 +210,7 @@ int trouveCASE(int X, int Y)
     for (int i = 0; i < 61; i++)
     {
         if (isInsideCASE(X, Y, structcase[i]))
-        {   
-            printf("on return structure\n");
-            printf("affiche posX de structcase %d\n",structcase[i]->posX);
-            printf("affiche posY de structcase %d\n",structcase[i]->posY);
-            printf("i vaut %d\n",i);
+        {
             return i;
         }
     }
@@ -261,20 +257,6 @@ void demande(int *pointeur) // demande combien de boules l'utilisateur veut dép
         *pointeur = element;
     }
 }
-
-/*
-void placement() // demande à l'utilisateur où il veut placer les boules.
-{
-    printf("Cliquer où vous souhaiter poser la/les boules\n");
-    //recuperation du clic
-    for (int i=0; i<61;i++){
-        if ((coplateau[0][i] > (x1 - 45)) && (coplateau[0][i] <= (x1 + 45)) && (coplateau[1][i] > (y1 - 45)) && (coplateau[1][i] <= (y1 + 45))){
-            coplateaumodifie[0][i]=x2;
-            coplateaumodifie[1][i]=y2;
-        }
-    }
-}
-*/
 
 int confirmation() // Demande si l'utilisateur à bien choisi ces billes
 {
@@ -350,7 +332,6 @@ int grille() // On défini notre grille
     }
 
     SDL_bool done = SDL_FALSE; // On défini un évènement réglé à FAUX qui va nous servir 'tant que le jeu n'est pas fini'.
-    SDL_bool done2 = SDL_FALSE;
 
     int i = 0;
     int compteur = 0;
@@ -363,239 +344,284 @@ int grille() // On défini notre grille
     int valeury = 0;
 
     int tour = 0;
-    int fini = 0;
+    int *tourfini = 0;
     int conf = 0;
 
+    int *pointeuranciennecase = 0;
     int *pointeurnouvellecase = 0;
+    int *pointeuranciennecaseblanc = 0;
+    int *pointeurnouvellecaseblanc = 0;
 
-    if (tour == 0)
+    int comodifnoire[1][14];
+    for (int i = 0; i < 14; i++)
     {
-        demande(&x);
+        comodifnoire[0][i] = trouveCASE(conoire[0][i], conoire[1][i]);
     }
-    else if (tour == 1)
+
+    int comodifblanc[1][14];
+    for (int i = 0; i < 14; i++)
     {
-        demande(&y);
+        comodifblanc[0][i] = trouveCASE(coblanc[0][i], coblanc[1][i]);
     }
 
     SDL_Event event;
     SDL_Event event2;
+    SDL_Event event3;
 
-    while (fini == 0) // Tant que la partie n'est pas finie
+    printf("\nLes noirs commencent la partie\n");
+    demande(&x);
+
+    while (!done)
     {
-        while (!done)
+
+        while (SDL_PollEvent(&event))
         {
 
-            while (SDL_PollEvent(&event))
+            switch (event.type)
             {
 
-                switch (event.type)
+            case SDL_QUIT: // Si l'utilisateur ferme la fenetre notre évènement passe à TRUE et on sort de la boucle.
+                done = SDL_TRUE;
+                break;
+
+            case SDL_MOUSEBUTTONDOWN:; // Quand il y a un clic de la souris
+                int x1 = event.button.x;
+                int y1 = event.button.y;
+                // On récupére les coordonnées du clic en x et y
+
+                for (int k = 0; k < 61; k++) // On dit que le clic peut avoir lieu sur tout le plateau et on met le numéro de la bille dans 'i' sinon on colorie les boules selectionnée jusqu'à i.
                 {
-
-                case SDL_QUIT: // Si l'utilisateur ferme la fenetre notre évènement passe à TRUE et on sort de la boucle.
-                    done = SDL_TRUE;
-                    break;
-
-                case SDL_MOUSEBUTTONDOWN:; // Quand il y a un clic de la souris
-                    int x1 = event.button.x;
-                    int y1 = event.button.y;
-                    // On récupére les coordonnées du clic en x et y
-
-                    for (int k = 0; k < 61; k++) // On dit que le clic peut avoir lieu sur tout le plateau et on met le numéro de la bille dans 'i' sinon on colorie les boules selectionnée jusqu'à i.
+                    if ((((coplateau[0][k])) > (x1 - 45)) && (((coplateau[0][k])) <= (x1 + 45)))
                     {
-                        if ((((coplateau[0][k])) > (x1 - 45)) && (((coplateau[0][k])) <= (x1 + 45)))
+                        if ((((coplateau[1][k])) > (y1 - 45)) && (((coplateau[1][k])) <= (y1 + 45)))
                         {
-                            if ((((coplateau[1][k])) > (y1 - 45)) && (((coplateau[1][k])) <= (y1 + 45)))
-                            {
-                                i = k;
-                            }
+                            i = k;
                         }
                     }
+                }
 
-                    // On compare la boule et le clic et si c'est dedans...
-                    // On change la couleur de la bille correspondante
-                    if ((coplateau[0][i] > (x1 - 45)) && (coplateau[0][i] <= (x1 + 45)) && (coplateau[1][i] > (y1 - 45)) && (coplateau[1][i] <= (y1 + 45)))
+                // On compare la boule et le clic et si c'est dedans...
+                // On change la couleur de la bille correspondante
+                if ((coplateau[0][i] > (x1 - 45)) && (coplateau[0][i] <= (x1 + 45)) && (coplateau[1][i] > (y1 - 45)) && (coplateau[1][i] <= (y1 + 45)))
+                {
+                    if (tour == 0) // Quand tour vaut 0 les noirs jouent
                     {
-                        if (tour == 0) // Quand tour vaut 0 les noirs jouent
+                        if ((pcurim[i]) == (ptexbleu[i])) // Si la bille est bleue
                         {
-                            if ((pcurim[i]) == (ptexbleu[i])) // Si la bille est bleue
-                            {
-                                pcurim[i] = ptex[i]; // Elle redevient noire et le compteur diminue (le coup n'a pas été joué).
-                                compteur--;
-                                printf("compteur vaut %d\n", compteur);
-                                pointeurcompteur = compteur;
-                            }
-                            else
-                            {
-                                valeur = x;
-                                if ((compteur >= valeur) || (compteur < 0)) // On vérifie que le nombre de billes qui changent de couleur ne dépasse pas le nombre de billes à bougers
-                                {
-                                    printf("Coup impossible\n"); // Si l'utilisateur à dit qu'il voulait bouger 2 boules, il ne peut pas en bouger 3
-                                    printf("Appuyer sur 'ENTRER' une fois la sélection faite.\n");
-                                }
-                                else
-                                {
-                                    pcurim[i] = ptexbleu[i]; // La bille cliquée devient bleu si elle était noire/
-                                    compteur++;              // Le coup à été joué et on incrémente le compteur ( plus que x boules à placer avant fin du tour).
-                                    printf("compteur vaut %d\n", compteur);
-                                    pointeurcompteur = compteur;
-                                }
-                            }
+                            pcurim[i] = ptex[i]; // Elle redevient noire et le compteur diminue (le coup n'a pas été joué).
+                            compteur--;
+                            printf("compteur vaut %d\n", compteur);
+                            pointeurcompteur = compteur;
                         }
-
-                        else if (tour == 1) // Quand tour vaut 1 les blancs jouent
-                        {
-                            if ((pcurimb[i]) == (ptexbleu[i])) // Si la bille est bleue
-                            {
-                                pcurimb[i] = ptexb[i]; // Elle redevient blanche et le compteur diminue (le coup n'a pas été joué).
-                                compteur--;
-                                printf("compteur vaut %d\n", compteur);
-                                pointeurcompteur = compteur;
-                            }
-                            else
-                            {
-                                valeury = y;
-                                if ((compteur >= valeury) || (compteur < 0)) // On vérifie que le nombre de billes qui changent de couleur ne dépasse pas le nombre de billes à bougers
-                                {
-                                    printf("Coup impossible\n"); // Si l'utilisateur à dit qu'il voulait bouger 2 boules, il ne peut pas en bouger 3
-                                    printf("Appuyer sur 'ENTRER' une fois la sélection faite.\n");
-                                }
-                                else
-                                {
-                                    pcurimb[i] = ptexbleu[i]; // La bille cliquée devient bleu si elle était blanche.
-                                    compteur++;               // Le coup à été joué et on incrémente le compteur (plus que x boules à placer avant fin du tour).
-                                    printf("compteur vaut %d\n", compteur);
-                                    pointeurcompteur = compteur;
-                                }
-                            }
-                        }
-                    }
-
-                case SDL_KEYDOWN:                                   // Si une touche du clavier est appuyée
-                    if (event.button.button == SDL_SCANCODE_RETURN) // Si cette touche est 'ENTREE'
-                    {
-                        button.clicked = true; // l'état du bouton dans la stucture passe à TRUE
-                        int valeur;            // sera la valeur du nombre de pions à bouger des noirs
-                        int valeury;           // sera la valeur du nombre de pions à bouger des blancs
-                        int valeurcompteur = pointeurcompteur;
-
-                        printf("tour vaut %d\n", tour);
-                        if (tour == 0)
+                        else
                         {
                             valeur = x;
-                            if (valeurcompteur != valeur) // On compare la valeur du compteur et le nombre de billes que l'utilisateur voulait bouger
+                            if ((compteur >= valeur) || (compteur < 0)) // On vérifie que le nombre de billes qui changent de couleur ne dépasse pas le nombre de billes à bougers
                             {
-                                printf("Impossible de valider\n"); // Si c'est différent (la selection n'est pas finie)
+                                printf("Coup impossible\n"); // Si l'utilisateur à dit qu'il voulait bouger 2 boules, il ne peut pas en bouger 3
+                                printf("Appuyer sur 'ENTRER' une fois la sélection faite.\n");
                             }
                             else
                             {
-                                compteur = 0; // On remet le compteur à 0 avant la prochaine itération
-
-                                printf("Cliquez là ou vous souhaiter poser vos/votre bille(s)\n");
-                                while (!done2)
-                                {
-                                    while (SDL_PollEvent(&event2))
-                                    {
-                                        switch (event2.type)
-                                        {
-                                        case SDL_MOUSEBUTTONUP:
-                                            int xpose = event2.button.x;
-                                            int ypose = event2.button.y;
-                                            int recupx,recupy;
-                                            printf("xpose,ypose = %d; %d\n", xpose, ypose);
-                                            int nouvellecase = trouveCASE(xpose, ypose); // On trouve la case correspondante
-                                            printf("nouvelle case vaut %d\n", nouvellecase);
-                                            //nouvellecase->posX = recupx;
-                                            //nouvellecase->posY = recupy;
-                                            pcurim[nouvellecase] = ptex[nouvellecase];
-                                            pointeurnouvellecase = nouvellecase;
-                                            printf("pointeur nouvelle case : %d\n", pointeurnouvellecase);
-                                            done2 = SDL_TRUE;
-                                        }
-                                    }
-                                }
+                                pcurim[i] = ptexbleu[i]; // La bille cliquée devient bleu si elle était noire/
+                                compteur++;              // Le coup à été joué et on incrémente le compteur ( plus que x boules à placer avant fin du tour).
+                                printf("compteur vaut %d\n", compteur);
+                                pointeurcompteur = compteur;
+                                pointeuranciennecase = i;
+                                printf("i noir vaut %d\n", i);
                             }
                         }
-                        else if (tour == 1)
+                    }
+
+                    else if (tour == 1) // Quand tour vaut 1 les blancs jouent
+                    {
+                        if ((pcurimb[i]) == (ptexbleu[i])) // Si la bille est bleue
+                        {
+                            pcurimb[i] = ptexb[i]; // Elle redevient blanche et le compteur diminue (le coup n'a pas été joué).
+                            compteur--;
+                            printf("compteur vaut %d\n", compteur);
+                            pointeurcompteur = compteur;
+                        }
+                        else
                         {
                             valeury = y;
-                            if (valeurcompteur != valeury) // On compare la valeur du compteur et le nombre de billes que l'utilisateur voulait bouger
+                            if ((compteur >= valeury) || (compteur < 0)) // On vérifie que le nombre de billes qui changent de couleur ne dépasse pas le nombre de billes à bougers
                             {
-                                printf("Impossible de valider\n"); // Si c'est différent (la selection n'est pas finie)
+                                printf("Coup impossible\n"); // Si l'utilisateur à dit qu'il voulait bouger 2 boules, il ne peut pas en bouger 3
+                                printf("Appuyer sur 'ENTRER' une fois la sélection faite.\n");
                             }
                             else
                             {
-                                compteur = 0;
-                                conf = 1; // L'état est confirmé, on va pouvoir nettoyer la grille et passer au tour d'après.
-                                printf("Cliquez là ou vous souhaiter poser vos/votre bille(s)\n");
-                                while (!done2)
-                                {
-                                    while (SDL_PollEvent(&event2))
-                                    {
-                                        switch (event2.type)
-                                        {
-                                        case SDL_MOUSEBUTTONUP:
-                                            int xpose = event2.button.x;
-                                            int ypose = event2.button.y;
-                                            printf("xpose,ypose = %d; %d\n", xpose, ypose);
-                                            CASE *nouvellecase = trouveCASE(xpose, ypose); // On trouve la case correspondante
-                                            // ptexbleu[nouvellecase]=ptex[i]; // La boule de la nouvelle case prend la boule de la case cliquée
-                                            done2 = SDL_TRUE;
-                                        }
-                                    }
-                                }
+                                pcurimb[i] = ptexbleu[i]; // La bille cliquée devient bleu si elle était blanche.
+                                compteur++;               // Le coup à été joué et on incrémente le compteur (plus que x boules à placer avant fin du tour).
+                                printf("compteur vaut %d\n", compteur);
+                                pointeurcompteur = compteur;
+                                pointeuranciennecaseblanc = i;
+                                printf("i blanc vaut %d\n", i);
                             }
                         }
                     }
                 }
-                /*
-                if (conf == 1) // Variable de confirmation (état confirmé pour le changement de tour)
+
+            case SDL_KEYDOWN:                                   // Si une touche du clavier est appuyée
+                if (event.button.button == SDL_SCANCODE_RETURN) // Si cette touche est 'ENTREE'
                 {
-                    if (tour == 0) // Si les noirs viennent de jouer on reset les pions et on passe au tour des blancs.
-                    {
+                    button.clicked = true; // l'état du bouton dans la stucture passe à TRUE
+                    int valeur;            // sera la valeur du nombre de pions à bouger des noirs
+                    int valeury;           // sera la valeur du nombre de pions à bouger des blancs
+                    int valeurcompteur = pointeurcompteur;
 
-                        for (int i = 0; i < 61; i++) // On remet toutes les billes dans leur couleur d'origine (on efface la selection bleue).
+                    printf("tour vaut %d\n", tour);
+                    if (tour == 0)
+                    {
+                        valeur = x;
+                        if (valeurcompteur != valeur) // On compare la valeur du compteur et le nombre de billes que l'utilisateur voulait bouger
                         {
-                            pcurimb[i] = ptexb[0];
-                            pcurim[i] = ptex[0];
+                            printf("Impossible de valider\n"); // Si c'est différent (la selection n'est pas finie)
                         }
-                        demande(&y); // On demande aux blancs de choisirs un nombre de billesà bouger
-                        tour = 1;
-                        // fini = 1;
+                        else
+                        {
+                            SDL_bool done2 = SDL_FALSE;
+                            compteur = 0; // On remet le compteur à 0 avant la prochaine itération
+                            printf("Cliquez là ou vous souhaiter poser vos/votre bille(s)\n");
+                            while (!done2)
+                            {
+                                while (SDL_PollEvent(&event2))
+                                {
+                                    switch (event2.type)
+                                    {
+                                    case SDL_MOUSEBUTTONUP:
+                                        int xpose = event2.button.x;
+                                        int ypose = event2.button.y;
+                                        printf("xpose,ypose = %d; %d\n", xpose, ypose);
+
+                                        int nouvellecase = trouveCASE(xpose, ypose); // On trouve la case correspondante
+                                        int anciennecase = 0;
+
+                                        pcurim[nouvellecase] = ptex[nouvellecase]; // affichage de la nouvelle bille.
+
+                                        pointeurnouvellecase = nouvellecase; // On fait un pointeur vers la nouvelle case
+                                        anciennecase = pointeuranciennecase; // On affecte la valeur du pointeur de l'ancienne case dans ancienne case
+
+                                        //int a = structcase[nouvellecase]->couleur;
+                                        //printf("structcase[nouvellecase]->couleur vaut %d\n",a);
+                                        int check = structcase[nouvellecase]->alentours->NO->couleur;
+                                        printf("check = structcase[nouvellecase]->alentours->NO->couleur vaut %d\n", check);
+
+                                        for (int i = 0; i < 14; i++)
+                                        {
+                                            if (comodifnoire[0][i] == anciennecase)
+                                            {                                      // Si le contenu de la case i vaut le numero de la case qui a la boule cliquée
+                                                comodifnoire[0][i] = nouvellecase; // la case i vaut maintenant la nouvelle case
+                                            }
+                                        }
+                                        printf("pointeur nouvelle case noir : %d\n", pointeurnouvellecase);
+                                        done2 = SDL_TRUE;
+                                    }
+                                }
+                            }
+                            conf = 1;
+                        }
                     }
 
-                    else if (tour == 1) // Si les blancs viennent de jouer on reset les pions et on passe au tour des noirs.
+                    else if (tour == 1)
                     {
-
-                        for (int i = 0; i < 61; i++) // On remet toutes les billes dans leur couleur d'origine (on efface la selection bleue).
+                        valeury = y;
+                        if (valeurcompteur != valeury) // On compare la valeur du compteur et le nombre de billes que l'utilisateur voulait bouger
                         {
-                            pcurimb[i] = ptexb[0];
-                            pcurim[i] = ptex[0];
+                            printf("Impossible de valider\n"); // Si c'est différent (la selection n'est pas finie)
                         }
-                        demande(&x);
-                        tour = 0;
+                        else
+                        {
+                            SDL_bool done3 = SDL_FALSE;
+
+                            printf("Cliquez là ou vous souhaiter poser vos/votre bille(s)\n");
+                            while (!done3)
+                            {
+                                while (SDL_PollEvent(&event3))
+                                {
+                                    switch (event3.type)
+                                    {
+                                    case SDL_MOUSEBUTTONUP:
+                                        int xposeblanc = event3.button.x;
+                                        int yposeblanc = event3.button.y;
+                                        printf("xpose,ypose = %d; %d\n", xposeblanc, yposeblanc);
+
+                                        int nouvellecaseblanc = trouveCASE(xposeblanc, yposeblanc); // On trouve la case correspondante
+                                        int anciennecaseblanc = 0;
+
+                                        pcurimb[nouvellecaseblanc] = ptexb[nouvellecaseblanc]; // affichage de la nouvelle bille.
+
+                                        pointeurnouvellecaseblanc = nouvellecaseblanc; // On fait un pointeur vers la nouvelle case
+                                        anciennecaseblanc = pointeuranciennecaseblanc; // On affecte la valeur du pointeur de l'ancienne case dans ancienne case
+
+                                        for (int i = 0; i < 14; i++)
+                                        {
+                                            if (comodifblanc[0][i] == anciennecaseblanc)
+                                            {                                           // Si le contenu de la case i vaut le numero de la case qui a la boule cliquée
+                                                comodifblanc[0][i] = nouvellecaseblanc; // la case i vaut maintenant la nouvelle case
+                                            }
+                                        }
+                                        printf("pointeur nouvelle case blanc : %d\n", pointeurnouvellecaseblanc);
+                                        done3 = SDL_TRUE;
+                                    }
+                                }
+                            }
+                            compteur = 0;
+                            conf = 1;
+                        }
                     }
-                    conf = 0; // On fait le tour jusqu'à ce que le placement des nouvelles billes soit confirmé.
-                }*/
+                }
             }
+        }
 
-            SDL_RenderClear(renderer);                      // On actualise le rendu
-            SDL_RenderCopy(renderer, textureG, NULL, NULL); // Afficher l'image blanche en arrière-plan
+        SDL_RenderClear(renderer);                      // On actualise le rendu
+        SDL_RenderCopy(renderer, textureG, NULL, NULL); // Afficher l'image blanche en arrière-plan
 
-            for (int i = 0; i < 61; i++) // Pour chaque case
+        for (int i = 0; i < 61; i++) // Pour chaque case
+        {
+            for (int j = 0; j < 14; j++)
             {
-                if ((i < 11) || ((i >= 13) && (i < 16))) // Sur les emplacement des billes noires, on affiche les billes noires
+                if (comodifnoire[0][j] == i) // Sur les emplacement des billes noires, on affiche les billes noires
                 {
                     SDL_RenderCopy(renderer, pcurim[i], NULL, &pimrect[1][i]);
                 }
-                else if (((i > 44) && (i < 48)) || (i > 49)) // Sur les emplacement des billes blanches, on affiche les billes blanches
+            }
+            for (int k = 0; k < 14; k++)
+            {
+                if (comodifblanc[0][k] == i) // Sur les emplacement des billes blanches, on affiche les billes blanches
                 {
                     SDL_RenderCopy(renderer, pcurimb[i], NULL, &pimrectb[1][i]);
                 }
-                else if (i==pointeurnouvellecase){
-                    SDL_RenderCopy(renderer, pcurim[i], NULL, &pimrect[1][i]);
-                }
             }
-            SDL_RenderPresent(renderer); // On affiche le nouveau rendu
+        }
+        SDL_RenderPresent(renderer); // On affiche le nouveau rendu
+
+        if (conf == 1) // Variable de confirmation (état confirmé pour le changement de tour)
+        {
+            if (tour == 0) // Si les noirs viennent de jouer
+            {
+                for (int j = 0; j < 14; j++) // On parcours comodifnoire qui contient le numéro des cases sur lesquelles il y a les billes noires
+                {
+                    int rempl = comodifnoire[0][j];
+                    pcurim[rempl] = ptex[0]; // On leur affecte la texture d'une bille noire
+                }
+                printf("\nAux blancs de jouer \n");
+                demande(&y); // On demande au blancs
+                tour = 1;
+            }
+            else if (tour == 1)
+            {
+                for (int j = 0; j < 14; j++)
+                {
+                    int remplblanc = comodifblanc[0][j];
+                    pcurimb[remplblanc] = ptexb[0];
+                }
+                printf("\nAux noirs de jouer \n");
+                demande(&x);
+                tour = 0;
+            }
+            conf = 0;
         }
     }
 
@@ -621,5 +647,6 @@ int main()
 {
     initialisationPlateau();
     grille();
+
     return (0);
 }
