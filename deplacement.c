@@ -9,11 +9,10 @@
 ///Gére le cas où la case de destination est VIDE
 ///Cas où on arrive sur le bord (détecter si la case de destination est NULL)(pas encore fait)
 ///Et le cas où il y a une bille sur la case de destination
-bool DeplacePion(DIRECTION direction, CASE* case_a_deplacer, TYPE_CASE couleur_joueur, int nb_meme_bille_derriere, int nb_bille_ennemi)
+bool DeplacePion(DIRECTION direction_bille, DIRECTION direction_ennemi, CASE* case_a_deplacer, TYPE_CASE couleur_joueur, int nb_meme_bille_derriere, int nb_bille_ennemi)
 {
-    //TODO : fonction qui détermine la direction
     //TODO : faire fonction qui prend direction et case à deplacer qui va initialiser nb meme bille et nb bille ennemi
-    CASE* case_de_destination;
+    CASE *case_de_destination, *nouvellecase;
     bool deplacement_possible;
 
     if(nb_meme_bille_derriere>=3){
@@ -22,7 +21,7 @@ bool DeplacePion(DIRECTION direction, CASE* case_a_deplacer, TYPE_CASE couleur_j
     }
 
     //Détermination de la direction de la case de destination
-    switch (direction)
+    switch (direction_ennemi)
     {
     case SO:
          case_de_destination=case_a_deplacer->alentours->SO;
@@ -41,6 +40,28 @@ bool DeplacePion(DIRECTION direction, CASE* case_a_deplacer, TYPE_CASE couleur_j
         break;
     case O:
         case_de_destination=case_a_deplacer->alentours->O;
+        break;
+    }
+
+    switch (direction_bille)
+    {
+    case SO:
+         nouvellecase=case_a_deplacer->alentours->SO;
+        break;
+    case SE:
+        nouvellecase=case_a_deplacer->alentours->SE;
+        break;
+    case NE:
+        nouvellecase=case_a_deplacer->alentours->NE;
+        break;
+    case NO:
+        nouvellecase=case_a_deplacer->alentours->NO;
+        break;
+    case E:
+        nouvellecase=case_a_deplacer->alentours->E;
+        break;
+    case O:
+        nouvellecase=case_a_deplacer->alentours->O;
         break;
     }
 
@@ -64,7 +85,7 @@ bool DeplacePion(DIRECTION direction, CASE* case_a_deplacer, TYPE_CASE couleur_j
         //Si ami dans la case de destination, incrémentation compteur bille ami
         if((case_a_deplacer->couleur==case_de_destination->couleur)==couleur_joueur){
             nb_meme_bille_derriere++;
-            deplacement_possible=DeplacePion(direction,case_de_destination,couleur_joueur,nb_meme_bille_derriere,nb_bille_ennemi);
+            deplacement_possible=DeplacePion(direction_bille,direction_ennemi,nouvellecase,couleur_joueur,nb_meme_bille_derriere,nb_bille_ennemi);
             if(deplacement_possible){
                 case_de_destination->couleur=case_a_deplacer->couleur;
                 case_a_deplacer->couleur=VIDE;
@@ -75,7 +96,7 @@ bool DeplacePion(DIRECTION direction, CASE* case_a_deplacer, TYPE_CASE couleur_j
         //Cas où bille d'en face est une bille ennemi, incrémentation compteur bille ennemi
         else if(case_a_deplacer->couleur!=case_de_destination->couleur){
             nb_bille_ennemi++;
-            deplacement_possible=DeplacePion(direction,case_de_destination,couleur_joueur,nb_meme_bille_derriere,nb_bille_ennemi);
+            deplacement_possible=DeplacePion(direction_bille,direction_ennemi,case_de_destination,couleur_joueur,nb_meme_bille_derriere,nb_bille_ennemi);
             if(deplacement_possible){
                 case_de_destination->couleur=case_a_deplacer->couleur;
                 case_a_deplacer->couleur=VIDE;
@@ -86,7 +107,7 @@ bool DeplacePion(DIRECTION direction, CASE* case_a_deplacer, TYPE_CASE couleur_j
         //Si plusieur bille ennemi à la suite, incrémentation compteur bille ennmi
         else if((case_a_deplacer->couleur==case_de_destination->couleur)!=couleur_joueur){
             nb_bille_ennemi++;
-            deplacement_possible=DeplacePion(direction,case_de_destination,couleur_joueur,nb_meme_bille_derriere,nb_bille_ennemi);
+            deplacement_possible=DeplacePion(direction_bille,direction_ennemi,nouvellecase,couleur_joueur,nb_meme_bille_derriere,nb_bille_ennemi);
             if(deplacement_possible){
                 case_de_destination->couleur=case_a_deplacer->couleur;
                 case_a_deplacer->couleur=VIDE;
