@@ -103,7 +103,10 @@ void alentour(){
     reliageBas(LIGNE1,LIGNE2);
     reliageBas(LIGNE2,LIGNE3);
     reliageBas(LIGNE3,LIGNE4);
-
+    reliageHaut(LIGNE4,LIGNE5);
+    reliageHaut(LIGNE5,LIGNE6);
+    reliageHaut(LIGNE6,LIGNE7);
+    reliageHaut(LIGNE7,LIGNE8);
 }
 
 void initialisationPile(PILE *pil,CASE *casse){
