@@ -44,6 +44,11 @@ int conoire[14], coblanc[14];
 //Fonction principale
 int main();
 
+//Fonction menu
+void renderMenu();
+void handleKeyboardEvent(SDL_Event *event);
+void menu();
+
 //Fonctions d'initialisation
 void initialisationPlateau();
 void creationCase(CASE* casse, int i);
@@ -57,6 +62,8 @@ void reliageHaut(PILE* pile1, PILE* pile2);
 void deplacement(int nb_bille_a_bouger, DIRECTION direction, SDL_Texture *current_state[61], TYPE_CASE couleur);
 bool verificationDeplacement(int nb_bille_amie, DIRECTION mouvement);
 void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61], TYPE_CASE couleur);
+void deplacementBille(int nb_bille, DIRECTION mouvement, SDL_Texture *image_bille, SDL_Texture *current_state[61]);
+void deplacementEjecte(CASE* bille_a_bouge, DIRECTION mouvement, SDL_Texture *image_bille, SDL_Texture *current_state[61]);
 
 //Fonction outils
 DIRECTION trouveDirection(CASE* emplacement_bille, CASE* destination);

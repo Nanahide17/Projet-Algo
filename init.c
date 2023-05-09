@@ -71,6 +71,16 @@ void alentour(){
     *LIGNE7=(PILE*)malloc(sizeof(PILE)),
     *LIGNE8=(PILE*)malloc(sizeof(PILE));
     //Initialisation de chaque pile en fonction de la ligne de jeu
+    LIGNE0->premier=NULL;
+    LIGNE1->premier=NULL;
+    LIGNE2->premier=NULL;
+    LIGNE3->premier=NULL;
+    LIGNE4->premier=NULL;
+    LIGNE5->premier=NULL;
+    LIGNE6->premier=NULL;
+    LIGNE7->premier=NULL;
+    LIGNE8->premier=NULL;
+
     for(int i=0;i<5;i++){
         initialisationPile(LIGNE0,structcase[i]);
     }
@@ -107,6 +117,7 @@ void alentour(){
     reliageHaut(LIGNE5,LIGNE6);
     reliageHaut(LIGNE6,LIGNE7);
     reliageHaut(LIGNE7,LIGNE8);
+
 }
 
 void initialisationPile(PILE *pil,CASE *casse){
@@ -115,6 +126,7 @@ void initialisationPile(PILE *pil,CASE *casse){
 
     if(pil->premier == NULL){
         pil->premier = casse;
+        casse->alentours->E = NULL;
     }
     else {
         while(parent->alentours->E != NULL){
@@ -122,6 +134,7 @@ void initialisationPile(PILE *pil,CASE *casse){
         }
         parent->alentours->E = casse;
         casse->alentours->O = parent;
+        casse->alentours->E = NULL;
     }
 
 }
@@ -130,11 +143,6 @@ void reliageBas(PILE *pile1,PILE *pile2){
     //Reliage entre deux piles
     //Ici nous nous chargeons que de la partie bas
     CASE *case_pile1 = pile1->premier, *case_pile2 = pile2->premier;
-
-    case_pile1->alentours->O = NULL;
-    case_pile2->alentours->O = NULL;
-    case_pile1->alentours->SO = NULL;
-    case_pile2->alentours->SO = NULL;
 
     while(case_pile1!= NULL){
         case_pile1->alentours->NO = case_pile2;
@@ -152,11 +160,6 @@ void reliageHaut(PILE* pile1, PILE* pile2){
     //Reliage entre deux piles
     //Ici nous nous chargeons que de la partie bas
     CASE *case_pile1 = pile1->premier, *case_pile2 = pile2->premier;
-
-    case_pile1->alentours->O = NULL;
-    case_pile2->alentours->O = NULL;
-    case_pile1->alentours->NO = NULL;
-    case_pile2->alentours->NO = NULL;
 
     while(case_pile2!= NULL){
         case_pile2->alentours->SO = case_pile1;

@@ -11,6 +11,11 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
     SDL_Event event;
     SDL_bool done=SDL_FALSE;
 
+    triCASE(nb_bille_a_bouger);
+
+    int ejecte_blanc_avant=ejection_blanc;
+    int ejecte_noir_avant=ejection_noir;
+
     while(!done){
         while(SDL_PollEvent(&event)){
             switch(event.type){
@@ -36,23 +41,20 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                         switch(nb_bille){
                             case 1 : ;
                                 CASE* case_a_deplace = structcase[liste_bille_selectionne[0]];
-                                CASE* caseNO =case_a_deplace->alentours->NO;
-                                CASE* caseO =case_a_deplace->alentours->O;
-                                CASE* caseSO =case_a_deplace->alentours->SO;
-                                CASE* caseNE =case_a_deplace->alentours->NE;
-                                CASE* caseE =case_a_deplace->alentours->E;
-                                CASE* caseSE =case_a_deplace->alentours->SE;
 
-
-                                if(verif_case_deplacement==caseNO){
+                                if(verif_case_deplacement==case_a_deplace->alentours->NO){
                                     if(verificationDeplacement(nb_bille,NO)){
-                                        if(couleur==NOIR){
-                                            current_state[case_selectionne]=image_bille_noire;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==0){
+                                            if(ejecte_blanc_avant!=ejection_blanc){
+                                                deplacementEjecte(verif_case_deplacement, NO, image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            deplacementBille(1,NO,image_bille_noire,current_state_bille_noir);
                                         }
-                                        else{
-                                            current_state[case_selectionne]=image_bille_blanc;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==1){
+                                            if(ejecte_noir_avant!=ejection_noir){
+                                                deplacementEjecte(verif_case_deplacement, NO, image_bille_noire, current_state_bille_noir);
+                                            }
+                                            deplacementBille(1, NO,image_bille_blanc, current_state_bille_blanc);
                                         }
                                         affichage_SDL();
                                         done=SDL_TRUE;
@@ -61,13 +63,17 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                                 }
                                 else if(verif_case_deplacement==case_a_deplace->alentours->O){
                                     if(verificationDeplacement(nb_bille,O)){
-                                        if(couleur==NOIR){
-                                            current_state[case_selectionne]=image_bille_noire;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==0){
+                                            if(ejecte_blanc_avant!=ejection_blanc){
+                                                deplacementEjecte(verif_case_deplacement, O, image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            deplacementBille(1,O,image_bille_noire,current_state_bille_noir);
                                         }
-                                        else{
-                                            current_state[case_selectionne]=image_bille_blanc;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==1){
+                                            if(ejecte_noir_avant!=ejection_noir){
+                                                deplacementEjecte(verif_case_deplacement, O, image_bille_noire, current_state_bille_noir);
+                                            }
+                                            deplacementBille(1, O,image_bille_blanc, current_state_bille_blanc);
                                         }
                                         affichage_SDL();
                                         done=SDL_TRUE;
@@ -76,13 +82,17 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                                 }
                                 else if(verif_case_deplacement==case_a_deplace->alentours->SO){
                                     if(verificationDeplacement(nb_bille,SO)){
-                                        if(couleur==NOIR){
-                                            current_state[case_selectionne]=image_bille_noire;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==0){
+                                            if(ejecte_blanc_avant!=ejection_blanc){
+                                                deplacementEjecte(verif_case_deplacement, SO, image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            deplacementBille(1,SO,image_bille_noire,current_state_bille_noir);
                                         }
-                                        else{
-                                            current_state[case_selectionne]=image_bille_blanc;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==1){
+                                            if(ejecte_noir_avant!=ejection_noir){
+                                                deplacementEjecte(verif_case_deplacement, SO, image_bille_noire, current_state_bille_noir);
+                                            }
+                                            deplacementBille(1, SO,image_bille_blanc, current_state_bille_blanc);
                                         }
                                         affichage_SDL();
                                         done=SDL_TRUE;
@@ -91,13 +101,17 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                                 }
                                 else if(verif_case_deplacement==case_a_deplace->alentours->NE){
                                     if(verificationDeplacement(nb_bille,NE)){
-                                        if(couleur==NOIR){
-                                            current_state[case_selectionne]=image_bille_noire;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==0){
+                                            if(ejecte_blanc_avant!=ejection_blanc){
+                                                deplacementEjecte(verif_case_deplacement, NE, image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            deplacementBille(1,NE,image_bille_noire,current_state_bille_noir);
                                         }
-                                        else{
-                                            current_state[case_selectionne]=image_bille_blanc;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==1){
+                                            if(ejecte_noir_avant!=ejection_noir){
+                                                deplacementEjecte(verif_case_deplacement, NE, image_bille_noire, current_state_bille_noir);
+                                            }
+                                            deplacementBille(1, NE,image_bille_blanc, current_state_bille_blanc);
                                         }
                                         affichage_SDL();
                                         done=SDL_TRUE;
@@ -106,13 +120,17 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                                 }
                                 else if(verif_case_deplacement==case_a_deplace->alentours->E){
                                     if(verificationDeplacement(nb_bille,E)){
-                                        if(couleur==NOIR){
-                                            current_state[case_selectionne]=image_bille_noire;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==0){
+                                            if(ejecte_blanc_avant!=ejection_blanc){
+                                                deplacementEjecte(verif_case_deplacement, E, image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            deplacementBille(1,E,image_bille_noire,current_state_bille_noir);
                                         }
-                                        else{
-                                            current_state[case_selectionne]=image_bille_blanc;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==1){
+                                            if(ejecte_noir_avant!=ejection_noir){
+                                                deplacementEjecte(verif_case_deplacement, E, image_bille_noire, current_state_bille_noir);
+                                            }
+                                            deplacementBille(1, E,image_bille_blanc, current_state_bille_blanc);
                                         }
                                         affichage_SDL();
                                         done=SDL_TRUE;
@@ -121,13 +139,17 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                                 }
                                 else if(verif_case_deplacement==case_a_deplace->alentours->SE){
                                     if(verificationDeplacement(nb_bille,SE)){
-                                        if(couleur==NOIR){
-                                            current_state[case_selectionne]=image_bille_noire;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==0){
+                                            if(ejecte_blanc_avant!=ejection_blanc){
+                                                deplacementEjecte(verif_case_deplacement, SE, image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            deplacementBille(1,SE,image_bille_noire,current_state_bille_noir);
                                         }
-                                        else{
-                                            current_state[case_selectionne]=image_bille_blanc;
-                                            current_state[liste_bille_selectionne[0]]=NULL;
+                                        if(tour==1){
+                                            if(ejecte_noir_avant!=ejection_noir){
+                                                deplacementEjecte(verif_case_deplacement, SE, image_bille_noire, current_state_bille_noir);
+                                            }
+                                            deplacementBille(1, SE,image_bille_blanc, current_state_bille_blanc);
                                         }
                                         affichage_SDL();
                                         done=SDL_TRUE;
@@ -140,48 +162,119 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                             break;
 
                             case 2 : ;
-                                DIRECTION mouvement=0;
                                 for(int i=0; i<2; i++){
-                                    CASE* case_a_deplace = structcase[liste_bille_selectionne[i]];
+                                    int test=liste_bille_selectionne[i];
+                                    CASE* case_a_deplace = structcase[test];
                                     if(verif_case_deplacement==case_a_deplace->alentours->NO){
-                                        mouvement=NO;
                                         if(verificationDeplacement(nb_bille,NO)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, NO, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(2,NO,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement, NO, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(2, NO,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->O){
                                         if(verificationDeplacement(nb_bille,O)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, O, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(2,O,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement, O, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(2, O,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->SO){
                                         if(verificationDeplacement(nb_bille,SO)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, SO, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(1,SO,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement, SO, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(1, SO,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->NE){
                                         if(verificationDeplacement(nb_bille,NE)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, NE, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(2,NE,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement, NE, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(2, NE,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->E){
                                         if(verificationDeplacement(nb_bille,E)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, E, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(2,E,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement, E, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(2, E,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
-                                        }
+                                            }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->SE){
                                         if(verificationDeplacement(nb_bille,SE)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, SE, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(2,SE,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement, SE, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(2, SE,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
@@ -195,42 +288,114 @@ void cliqueSurDeplacement(int nb_bille_a_bouger, SDL_Texture *current_state[61],
                                     CASE* case_a_deplace = structcase[liste_bille_selectionne[i]];
                                     if(verif_case_deplacement==case_a_deplace->alentours->NO){
                                         if(verificationDeplacement(nb_bille,NO)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, NO, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(3,NO,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement,NO, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(3, NO,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->O){
                                         if(verificationDeplacement(nb_bille,O)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, O, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(3,O,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement,O, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(3, O,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->SO){
                                         if(verificationDeplacement(nb_bille,SO)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, SO, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(3,SO,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement,SO, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(3, SO,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->NE){
                                         if(verificationDeplacement(nb_bille,NE)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, NE, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(3,NE,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement,NE, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(3, NE,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->E){
                                         if(verificationDeplacement(nb_bille,E)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, E, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(3,E,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement,E, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(3, E,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
                                     }
                                     else if(verif_case_deplacement==case_a_deplace->alentours->SE){
                                         if(verificationDeplacement(nb_bille,SE)){
-                                            printf("Désolé mais nous ne pouvons pas gérer ce genre de mouvement pour l'instant\n");
+                                            if(tour==0){
+                                                if(ejecte_blanc_avant!=ejection_blanc){
+                                                    deplacementEjecte(verif_case_deplacement, SE, image_bille_blanc, current_state_bille_blanc);
+                                                }
+                                                deplacementBille(3,SE,image_bille_noire,current_state_bille_noir);
+                                            }
+                                            if(tour==1){
+                                                if(ejecte_noir_avant!=ejection_noir){
+                                                    deplacementEjecte(verif_case_deplacement,SE, image_bille_noire, current_state_bille_noir);
+                                                }
+                                                deplacementBille(3, SE,image_bille_blanc, current_state_bille_blanc);
+                                            }
+                                            affichage_SDL();
                                             done=SDL_TRUE;
                                         }
                                         break;
@@ -251,8 +416,6 @@ bool verificationDeplacement(int nb_bille_amie, DIRECTION mouvement){
     DIRECTION ami;
     int nb_bille_ennemi;
     int validation=0;
-
-    triCASE(nb_bille_amie);
 
     for(int i=0; i<nb_bille_amie; i++){
         CASE* bille=structcase[liste_bille_selectionne[i]];
@@ -279,6 +442,13 @@ bool verificationDeplacement(int nb_bille_amie, DIRECTION mouvement){
 
         if(nb_bille_amie>1){
             ami=trouveDirection(structcase[liste_bille_selectionne[0]],structcase[liste_bille_selectionne[1]]);
+        }
+
+        for(int j=0; j<nb_bille_amie; j++){
+            if(destination==structcase[liste_bille_selectionne[j]]){
+                validation++;
+                break;
+            }
         }
 
         if(destination->couleur==0){
@@ -311,13 +481,14 @@ bool verificationDeplacement(int nb_bille_amie, DIRECTION mouvement){
                     }
                 }
                 if(destination==NULL){
+                    validation++;
                     if(tour==0){
                         ejection_noir++;
                     }
-                    else{
+                    if(tour==1){
                         ejection_blanc++;
                     }
-                    break;
+
                 }
             }
         }
@@ -327,4 +498,192 @@ bool verificationDeplacement(int nb_bille_amie, DIRECTION mouvement){
         return true;
     }
     return false;
+}
+
+
+void deplacementBille(int nb_bille, DIRECTION mouvement, SDL_Texture *image_bille, SDL_Texture *current_state[61]){
+
+    for(int i=0; i<nb_bille; i++){
+
+        int same_bille=0;
+
+        CASE* bille=structcase[liste_bille_selectionne[i]];
+        CASE* destination;
+
+        switch(mouvement){
+            case NO :;
+                destination=bille->alentours->NO;
+            break;
+
+            case O :;
+                destination=bille->alentours->O;
+            break;
+
+            case SO :;
+                destination=bille->alentours->SO;
+            break;
+
+            case NE :;
+                destination=bille->alentours->NE;
+            break;
+
+            case E :;
+                destination=bille->alentours->E;
+            break;
+
+            case SE :;
+                destination=bille->alentours->SE;
+            break;
+        }
+
+        int inlist_destination=0;
+        while(destination!=structcase[inlist_destination]){
+            inlist_destination++;
+        }
+
+        for(int j=0; j<nb_bille; j++){
+            if(inlist_destination==liste_bille_selectionne[j]){
+                same_bille++;
+            }
+        }
+
+        if(same_bille!=0){
+            current_state[inlist_destination]=image_bille;
+            current_state[liste_bille_selectionne[i]]=NULL;
+        }
+        else{
+            if(current_state[liste_bille_selectionne[i]]==image_bille){
+                current_state[inlist_destination]=image_bille;
+            }
+            else{
+                current_state[inlist_destination]=image_bille;
+                current_state[liste_bille_selectionne[i]]=NULL;
+            }
+        }
+    }
+}
+
+
+void deplacementEjecte(CASE* bille_a_bouge, DIRECTION mouvement, SDL_Texture *image_bille, SDL_Texture *current_state[61]){
+    CASE* case_a_changer[2];
+    int i=0;
+    int nb_bille=0;
+    switch(mouvement){
+        case NO :;
+            while(bille_a_bouge->alentours->NO){
+                nb_bille++;
+                case_a_changer[i]=bille_a_bouge;
+                bille_a_bouge=bille_a_bouge->alentours->NO;
+                i++;
+            }
+        break;
+        case O:;
+            while(bille_a_bouge->alentours->O){
+                nb_bille++;
+                case_a_changer[i]=bille_a_bouge;
+                bille_a_bouge=bille_a_bouge->alentours->NO;
+                i++;
+            }
+        break;
+        case SO :;
+            while(bille_a_bouge->alentours->SO){
+                nb_bille++;
+                case_a_changer[i]=bille_a_bouge;
+                bille_a_bouge=bille_a_bouge->alentours->NO;
+                i++;
+            }
+        break;
+        case NE :;
+            while(bille_a_bouge->alentours->NE){
+                nb_bille++;
+                case_a_changer[i]=bille_a_bouge;
+                bille_a_bouge=bille_a_bouge->alentours->NO;
+                i++;
+            }
+        break;
+        case E :;
+            while(bille_a_bouge->alentours->E){
+                nb_bille++;
+                case_a_changer[i]=bille_a_bouge;
+                bille_a_bouge=bille_a_bouge->alentours->NO;
+                i++;
+            }
+        break;
+        case SE :;
+            while(bille_a_bouge->alentours->SE){
+                nb_bille++;
+                case_a_changer[i]=bille_a_bouge;
+                bille_a_bouge=bille_a_bouge->alentours->NO;
+                i++;
+            }
+
+        break;
+    }
+
+    int index_case_inlist[2];
+    for(int i=0; i<nb_bille;i++){
+        int inlist=0;
+        while(case_a_changer[i]!=structcase[inlist]){
+            inlist++;
+        }
+        index_case_inlist[i]=inlist;
+    }
+
+    CASE* destination_case[2];
+    for (int i=0; i<nb_bille;i++){
+        switch(mouvement){
+            case NO :;
+                destination_case[i]=case_a_changer[i]->alentours->NO;
+            break;
+            case O:;
+                destination_case[i]=case_a_changer[i]->alentours->O;
+            break;
+            case SO :;
+                destination_case[i]=case_a_changer[i]->alentours->SO;
+            break;
+            case NE :;
+                destination_case[i]=case_a_changer[i]->alentours->NE;
+            break;
+            case E :;
+                destination_case[i]=case_a_changer[i]->alentours->E;
+            break;
+            case SE :;
+                destination_case[i]=case_a_changer[i]->alentours->SE;
+            break;
+        }
+    }
+
+    int index_desti_inlist[2];
+    for(int i=0; i<nb_bille;i++){
+        int inlist=0;
+        while(destination_case[i]!=structcase[inlist]){
+            inlist++;
+        }
+        index_desti_inlist[i]=inlist;
+    }
+
+    int same_bille=0;
+    for(int j=0; j<nb_bille; j++){
+        for(int k=0; k<nb_bille;k++){
+            if(index_desti_inlist[k]==index_case_inlist[j]){
+                same_bille++;
+            }
+        }
+    }
+
+    for(int i=0; i<nb_bille; i++){
+        if(same_bille!=0){
+            current_state[index_desti_inlist[i]]=image_bille;
+            current_state[index_case_inlist[i]]=NULL;
+        }
+        else{
+            if(current_state[index_case_inlist[i]]==image_bille){
+                current_state[index_desti_inlist[i]]=image_bille;
+            }
+            else{
+                current_state[index_desti_inlist[i]]=image_bille;
+                current_state[index_case_inlist[i]]=NULL;
+            }
+        }
+    }
 }

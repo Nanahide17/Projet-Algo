@@ -25,7 +25,7 @@ bool isInsideCASE(int X, int Y, CASE* casse){
     if(q2x>largeur_cadran || q2y>hauteur_cadran*2){//On teste si le point est dans le carré "circoncrit" de l'hexagone
         return false;
     }
-    return (2*hauteur_cadran*largeur_cadran-hauteur_cadran*q2x-largeur_cadran*q2y >= 0);
+    return true;
 }
 
 DIRECTION trouveDirection(CASE* emplacement_bille, CASE* destination){

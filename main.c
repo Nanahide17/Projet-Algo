@@ -4,7 +4,6 @@
 
 int main()
 {
-    initialisationPlateau();
-    grille();
+    menu();
     return 0;
 }

@@ -214,10 +214,10 @@ int grille(){
         nb_bille_a_bouger=demande(); //On demande à l'utilisateur combien de bille il veut bouger
         selection_bille(&liste_bille_selectionne, nb_bille_a_bouger, current_state_bille_noir,image_bille_noire, NOIR);
         tour=1;
-        printf("Aux tours des blancs\n");
+        printf("\nAux tours des blancs\n");
         nb_bille_a_bouger=demande();
         selection_bille(&liste_bille_selectionne,nb_bille_a_bouger, current_state_bille_blanc, image_bille_blanc, BLANC);
-        printf("Aux tours des noires");
+        printf("\nAux tours des noires");
         tour=0;
     }
 
@@ -232,6 +232,7 @@ int grille(){
     SDL_DestroyTexture(imageG);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    IMG_Quit();
     SDL_Quit();
 
     return 0;
